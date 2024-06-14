@@ -1,14 +1,39 @@
 <script setup>
+import { RouterLink, RouterView } from 'vue-router'
 import logo from "../components/logo.vue"
 import uploadimage from "../components/uploadimage.vue"
 import uploadcamera from "../components/uploadcamera.vue"
 
+import { ref } from "vue"
+
+import { useRoute } from 'vue-router'
+
+import axios from 'axios';
+
+const route = useRoute()
+const data = ref("http://localhost:3000/uploads/" + route.query.data)
+
+console.log(route.query.data)
+
+//https://www.nishinippon.co.jp/uploads/image/1646311/large_IP240322JIJ000001000.jpg
+
+
+const rangeValue = ref(0); // デフォルトの値を50に設定
+
+const magic = async () => {
+  console.log(rangeValue.value)
+  //axiosで送信して、受信したらdataを変える
+
+  const response = await axios.post('http://localhost:3000/magic');
+  data.value = response.data;
+
+}
 </script>
 
 <template>
   <div>
     <div class="position fixed" style="transform: translateY(-50%); top: 45%;">
-      <img src="https://www.nishinippon.co.jp/uploads/image/1646311/large_IP240322JIJ000001000.jpg" class="w-screen">
+      <img :src="data" class="w-screen">
     </div>
 
     <div class="h-dvh position">
@@ -27,7 +52,8 @@ import uploadcamera from "../components/uploadcamera.vue"
           <h1 class="text-white text-lg ml-5 font-bold">編集</h1>
           <h1 class="text-white text-sm ml-5 mt-5">匿名レベル ・ Low</h1>
           <div class="mx-5 mt-3 flex">
-            <input type="range" id="level" name="level" min="0" max="100" value="0" class="slider mr-5">
+            <input type="range" id="level" name="level" min="0" max="100" value="0" class="slider mr-5"
+              v-model="rangeValue">
 
             <button class="flex bg-white/40 rounded-full px-3 py-3 border-r-2 border-black hover:bg-white/50" width="48"
               height="48">
@@ -37,7 +63,8 @@ import uploadcamera from "../components/uploadcamera.vue"
 
           <div class="flex mt-5">
             <div class="flex ml-5">
-              <button class="flex bg-violet-600 hover:bg-violet-500 rounded-l-full px-4 py-3 border-r-2 border-black">
+              <button class="flex bg-violet-600 hover:bg-violet-500 rounded-l-full px-4 py-3 border-r-2 border-black"
+                @click="magic">
                 <img src="/icons/magic.svg" class="dark:invert" width="20">
                 <p class="text-sm text-white ml-2 font-bold">Magicで変換</p>
               </button>
@@ -51,7 +78,7 @@ import uploadcamera from "../components/uploadcamera.vue"
               <button class="flex bg-white/30 rounded-full px-4 py-3 border-r-2 border-black hover:bg-white/50"
                 width="48" height="48">
                 <img src="/icons/camera.svg" class="dark:invert mx-auto my-auto" widht="30">
-                <p class="text-sm text-white ml-2 font-bold">Retake</p>
+                <RouterLink to="/upload" class="text-sm text-white ml-2 font-bold">Retake</RouterLink>
               </button>
             </div>
           </div>

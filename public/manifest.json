@@ -3,5 +3,5 @@
   "background_color": "#000",
   "display": "fullscreen",
   "scope": "/",
-  "start_url": "/edit"
+  "start_url": "/"
 }
