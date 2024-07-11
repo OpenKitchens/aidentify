@@ -19,10 +19,12 @@ import uploadcamera from "../components/uploadcamera.vue"
       <uploadimage />
     </section>
 
+    <!--
     <section class="mt-10">
       <h1 class="text-white text-lg ml-5">または写真を撮る</h1>
       <uploadcamera />
     </section>
-
+    -->
+  
   </div>
 </template>
