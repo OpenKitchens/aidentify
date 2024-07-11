@@ -21,6 +21,7 @@ const router = useRouter()
 function onFileChange(event) {
   file.value = event.target.files[0];
   uploadFile()
+  saveFileToSession(event)
 }
 
 async function uploadFile() {
@@ -33,17 +34,27 @@ async function uploadFile() {
   formData.append('file', file.value);
 
   try {
-    const response = await axios.post('http://localhost:3000/upload', formData, {
+    //const response = await axios.post('http://34.83.236.85:8000/classify_image/', formData, {//ここにエンドポイントをかく
+    const response = await axios.post('http://34.170.246.161:8000/classify_image/', formData, {//ここにエンドポイントをかく
+      //await axios.post('http://34.83.236.85:8000/classify_image/', formData, {//ここにエンドポイントをかく
       headers: {
         'Content-Type': 'multipart/form-data',
+        "Access-Control-Allow-Origin": "*",
       },
     });
-    if (response.data.message == "success") {
-      console.log(response.data.file)
-      router.push({ name: 'edit', query: { data: response.data.file } })
-    }
+
+    sessionStorage.setItem('risk_level', response.data.risk_level);
+    router.push({ name: 'edit' }); // 成功した場合、次のページに移動
   } catch (error) {
     console.error('アップロード失敗:', error);
   }
+}
+
+function saveFileToSession() {
+  const reader = new FileReader();
+  reader.onload = function (event) {
+    sessionStorage.setItem('uploadedImage', event.currentTarget.result); // ファイルデータをBase64形式でsessionStorageに保存
+  };
+  reader.readAsDataURL(file.value); // ファイルをData URLに変換
 }
 </script>

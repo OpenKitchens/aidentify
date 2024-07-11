@@ -11,7 +11,8 @@ import { useRoute } from 'vue-router'
 import axios from 'axios';
 
 const route = useRoute()
-const data = ref("http://localhost:3000/uploads/" + route.query.data)
+const data = ref(sessionStorage.getItem('uploadedImage'))
+const risk_level = ref(sessionStorage.getItem('risk_level'))
 
 console.log(route.query.data)
 
@@ -24,6 +25,8 @@ const magic = async () => {
   console.log(rangeValue.value)
   //axiosで送信して、受信したらdataを変える
 
+
+  //ここに変換後の画像を表示
   const response = await axios.post('http://localhost:3000/magic');
   data.value = response.data;
 
@@ -50,7 +53,7 @@ const magic = async () => {
 
         <div class="mt-8">
           <h1 class="text-white text-lg ml-5 font-bold">編集</h1>
-          <h1 class="text-white text-sm ml-5 mt-5">匿名レベル ・ Low</h1>
+          <h1 class="text-white text-sm ml-5 mt-5">匿名レベル ・ {{ risk_level }}</h1>
           <div class="mx-5 mt-3 flex">
             <input type="range" id="level" name="level" min="0" max="100" value="0" class="slider mr-5"
               v-model="rangeValue">
